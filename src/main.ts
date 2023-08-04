@@ -1,12 +1,13 @@
 import "./style.css";
 
-import { TODO } from "./types/type";
+import { Task } from "./types/type";
+import { Lable } from "./types/type";
+import { State } from "./types/type";
 const createId = () => {
   return Math.floor(Math.random() * 100000);
 };
-type LABLE = "Green" | "Blue" | "Red" | "Yellow";
-const lable: LABLE[] = ["Green", "Blue", "Red", "Yellow"];
-let data: TODO[] = [
+const lable: Lable[] = ["Green", "Blue", "Red", "Yellow"];
+let data: Task[] = [
   {
     id: createId(),
     title: "todo1",
@@ -32,14 +33,13 @@ let data: TODO[] = [
     color: [],
   },
 ];
-type DO = "todo" | "doing" | "done";
-const typeDo: DO[] = ["todo", "doing", "done"];
+const typeDo: State[] = ["todo", "doing", "done"];
 const input: HTMLInputElement = document.createElement("input");
 const div: HTMLDivElement = document.createElement("div");
 const handleChangeInput = (e: Event) => {
-  const target = e.target as HTMLInputElement;
+  const target = e.target as HTMLInputElement ;
   if (target.value) {
-    const todo: TODO = addTodo(target.value);
+    const todo: Task = addTodo(target.value);
     target.value = "";
     renderUi();
   }
@@ -57,9 +57,9 @@ export const renderUi = () => {
 
 const handleClicked = (e: Event, id: number) => {
   const target = e.target as HTMLButtonElement;
-  const state = target.textContent!.toLowerCase();
+  const state: State = target.textContent!.toLowerCase() as State;
   console.log(data);
-  data = data.map((todo: TODO) => {
+  data = data.map((todo: Task) => {
     if (todo.id === id) {
       todo.state = state;
     }
@@ -68,12 +68,12 @@ const handleClicked = (e: Event, id: number) => {
   renderUi();
 };
 
-const handleChangeLabel = (e: Event, id: number, color: string) => {
+const handleChangeLabel = (e: Event, id: number, color: Lable) => {
     const target = e.target as HTMLButtonElement; // Explicitly cast to HTMLButtonElement
     const button = target as HTMLButtonElement;
     
     console.log(data);
-  data = data.map((todo: TODO) => {
+  data = data.map((todo: Task) => {
     if (todo.id === id) {
         if(!todo.color.includes(color)){
             todo.color.push(color);
@@ -91,8 +91,8 @@ const handleChangeLabel = (e: Event, id: number, color: string) => {
 //   renderUi();
 };
 
-const addTodo: (title: string) => TODO = (title) => {
-  const todo: TODO = {
+const addTodo: (title: string) => Task = (title) => {
+  const todo: Task = {
     id: new Date().getTime(),
     title,
     state: "todo",
@@ -105,14 +105,14 @@ const addTodo: (title: string) => TODO = (title) => {
 };
 
 export const renderList: (state: string) => HTMLDivElement = (state) => {
-  const filterTypeDo: DO[] = typeDo.filter((type: DO) => type !== state);
+  const filterTypeDo: State[] = typeDo.filter((type: State) => type !== state);
   const ul: HTMLUListElement = document.createElement("ul");
   const div = document.createElement("div");
   const h1 = document.createElement("h1");
   h1.innerHTML = state;
   ul.innerHTML = "";
-  const filterData = data.filter((todo: TODO) => todo.state === state);
-  filterData.forEach((todo: TODO) => {
+  const filterData = data.filter((todo: Task) => todo.state === state);
+  filterData.forEach((todo: Task) => {
     const li: HTMLLIElement = document.createElement("li");
     li.style.display = "flex";
     li.style.alignItems = "center";
@@ -129,7 +129,7 @@ export const renderList: (state: string) => HTMLDivElement = (state) => {
     li.appendChild(span);
     li.appendChild(button_1);
     li.appendChild(button_2);
-    lable.map((color: LABLE) => {
+    lable.map((color: Lable) => {
       const button: HTMLButtonElement = document.createElement("button");
       button.onclick = (event) => handleChangeLabel(event, todo.id, color);
       button.style.width = "20px";

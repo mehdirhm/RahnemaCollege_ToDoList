@@ -1,9 +1,11 @@
-export interface TODO {
+export interface Task {
     id: number;
     title: string;
-    state: string;
+    state: State;
     date: string;
     description: string;
-    color: string[];
+    color: Lable[];
 }
 
+export type Lable = "Green" | "Blue" | "Red" | "Yellow";
+export type State = "todo" | "doing" | "done";
