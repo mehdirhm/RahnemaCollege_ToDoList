@@ -4,6 +4,6 @@ export interface TODO {
     state: string;
     date: string;
     description: string;
-    color: string;
+    color: string[];
 }
 

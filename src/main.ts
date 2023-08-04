@@ -13,7 +13,7 @@ let data: TODO[] = [
     state: "todo",
     date: "2020-01-01",
     description: "todo1",
-    color: "green",
+    color: [],
   },
   {
     id: createId(),
@@ -21,7 +21,7 @@ let data: TODO[] = [
     state: "doing",
     date: "2020-01-02",
     description: "todo1",
-    color: "green",
+    color: [],
   },
   {
     id: createId(),
@@ -29,7 +29,7 @@ let data: TODO[] = [
     state: "done",
     date: "2020-01-03",
     description: "todo1",
-    color: "green",
+    color: [],
   },
 ];
 type DO = "todo" | "doing" | "done";
@@ -69,14 +69,26 @@ const handleClicked = (e: Event, id: number) => {
 };
 
 const handleChangeLabel = (e: Event, id: number, color: string) => {
-  console.log(data);
+    const target = e.target as HTMLButtonElement; // Explicitly cast to HTMLButtonElement
+    const button = target as HTMLButtonElement;
+    
+    console.log(data);
   data = data.map((todo: TODO) => {
     if (todo.id === id) {
-      todo.color = color;
+        if(!todo.color.includes(color)){
+            todo.color.push(color);
+            button.style.backgroundColor = color;  
+        }
+        else{
+            todo.color = todo.color.filter((item: string) => item !== color);
+            button.style.backgroundColor = '';  
+        }
+      
+    //   console.log(todo.color);
     }
     return todo;
   });
-  renderUi();
+//   renderUi();
 };
 
 const addTodo: (title: string) => TODO = (title) => {
@@ -86,7 +98,7 @@ const addTodo: (title: string) => TODO = (title) => {
     state: "todo",
     date: new Date().toISOString(),
     description: title,
-    color: "green",
+    color: [],
   };
   data.push(todo);
   return todo;
@@ -109,7 +121,6 @@ export const renderList: (state: string) => HTMLDivElement = (state) => {
     const button_2: HTMLButtonElement = document.createElement("button");
     const span: HTMLSpanElement = document.createElement("span");
     span.textContent = todo.title;
-    span.style.color = todo.color;
     button_1.textContent = filterTypeDo[0];
     button_2.textContent = filterTypeDo[1];
     button_1.onclick = (event) => handleClicked(event, todo.id);
@@ -123,7 +134,12 @@ export const renderList: (state: string) => HTMLDivElement = (state) => {
       button.onclick = (event) => handleChangeLabel(event, todo.id, color);
       button.style.width = "20px";
       button.style.height = "20px";
-      button.style.backgroundColor = color;
+      if(todo.color.includes(color)){
+        button.style.backgroundColor = color;
+      }
+      else{
+        button.style.borderColor = color;
+    }
       li.appendChild(button);
     });
 
